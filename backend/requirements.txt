@@ -1,0 +1,10 @@
+gridstatus
+pandas
+requests
+xgboost
+scikit-learn
+fastapi
+uvicorn
+python-dotenv
+duckdb
+matplotlib
