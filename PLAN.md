@@ -1,28 +1,19 @@
-# PLAN.md — CurtailCast: Clean-Energy Waste Forecasting
+# PLAN.md — DuckPredict: Clean-Energy Waste Forecasting
 
 **Hackathon:** Hack the Habitat — "Build tech that protects the planet"
 **Track:** Clean energy / environmental monitoring
 **Team:** Solo
 **Target build window:** 3–4 weeks
 
-> **The one-line pitch:** *CurtailCast forecasts where and when the grid will throw away clean energy in the next 48 hours — and tells a battery operator exactly when to charge on it.*
+> **The one-line pitch:** *DuckPredict forecasts where and when the grid will throw away clean energy in the next 48 hours — and tells a battery operator exactly when to charge on it.*
 
 This is not a dashboard project with a forecast bolted on. It is a **forecasting + decision tool** with a dashboard as its surface. That distinction is the difference between a 7.5 and a 9.
 
 ---
 
-## Project Name Options
+## Project: DuckPredict
 
-Pick one and lock it in for Devpost branding:
-
-1. **CurtailCast** (current) — Direct, memorable, clearly about forecasting curtailment. Strong technical feel.
-2. **CleanWindow** — Poetic framing: the window of free clean energy the grid is about to waste. Approachable.
-3. **GridShift** — Broader appeal. About shifting energy use to match curtailment windows. Strategy-focused.
-4. **WasteWatch** — Blunt, visceral. "Watch the waste" hooks judges on the problem immediately.
-5. **SolarSense** — Lighter, more consumer-facing. "Sense when solar is about to be wasted."
-6. **DuckPredict** — Nerd appeal. The duck curve is famous in energy circles; shows insider knowledge.
-
-**Recommendation: CurtailCast.** It's technical, memorable, directly descriptive, and unique enough that Devpost search won't bury you. Lock it in now.
+**Locked in.** The duck curve is famous in energy circles and shows insider knowledge. It's memorable, nerd-appeal strong, and perfect for the Devpost branding.
 
 ---
 
@@ -32,7 +23,7 @@ When renewable generation exceeds what the grid can absorb or transmit, operator
 
 - California (CAISO) curtailed **~3.4 million MWh of solar and wind in 2024** — enough to power hundreds of thousands of homes — and it grows every year.
 - The waste is **predictable**: it clusters in known transmission bottlenecks and known times (sunny, low-demand spring afternoons — the "duck curve").
-- **The gap we fill:** curtailment data is published *after the fact*, scattered across operator portals, and never turned into a *forward-looking, actionable* signal. Nobody says "here is the clean energy about to be wasted tomorrow, why, and what to do about it." That is CurtailCast.
+- **The gap we fill:** curtailment data is published *after the fact*, scattered across operator portals, and never turned into a *forward-looking, actionable* signal. Nobody says "here is the clean energy about to be wasted tomorrow, why, and what to do about it." That is DuckPredict.
 
 We are **not** "fixing the grid." We are building the **forecasting + decision layer** that curtailment currently lacks.
 
@@ -136,7 +127,7 @@ A polished single-region tool with a working forecast and an action card **beats
 ## 7. Impact Framing (judges reward measurable impact)
 
 - Convert wasted MWh into felt units: homes powered, EVs charged, CO₂-equivalent if that clean energy had displaced gas.
-- Lead with the **action**, not the observation: *"CurtailCast tells a battery operator exactly when to store free clean energy the grid is about to throw away."*
+- Lead with the **action**, not the observation: *"DuckPredict tells a battery operator exactly when to store free clean energy the grid is about to throw away."*
 - Path to impact is concrete and one hop away from the forecast — that's what earns the "could genuinely be used" credit.
 
 ---
