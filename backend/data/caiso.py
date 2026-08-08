@@ -38,9 +38,11 @@ def fetch_curtailment(start, end, persist: bool = True) -> pd.DataFrame:
     for d in _date_range(start, end):
         try:
             frames.append(_caiso.get_curtailment(str(d)))
+
         # NOTE: a missing daily report must not kill the backfill
         except Exception as e:
             print(f"Skipping curtailment data on {d}: {str(e)[:80]}")
+            
     if not frames:
         raise RuntimeError("No curtailment data fetched from given range")
 
@@ -106,20 +108,20 @@ def _hourly_mean(df: pd.DataFrame, cols, ts_col: str = "Interval Start") -> pd.D
 
         # NOTE: Turns timestamp back into regular column
         .reset_index()
+
         .rename(columns={ts_col: "timestamp"})
     )
     return hourly
 
+'''
+Pulls hourly solar/wind generation data and total demand for [stard, end]
+Columns: timestamp, solar_mwh, wind_mwh, demand_mwh
 
+Note: Capacity_mwh is deliberatly not produced here, CAISO does not publish it, EIA-860 does
+'''
 def fetch_generation_load(start, end, persist: bool = True) -> pd.DataFrame:
-    """Pull hourly solar/wind generation and total demand for [start, end].
-    Columns: timestamp, solar_mwh, wind_mwh, demand_mwh.
 
-    NOTE: installed `capacity_mwh` is deliberately NOT produced here — CAISO's
-    feeds don't publish it. It comes from EIA-860 (a separate, later step) and is
-    joined onto this table then. Better an honestly-incomplete schema than a
-    fabricated capacity column.
-    """
+    # NOTE: fuel_frames and load_frames are lists with outputs of get_fuel_mix() and get_load()
     fuel_frames, load_frames = [], []
     for d in _date_range(start, end):
         try:
@@ -130,32 +132,49 @@ def fetch_generation_load(start, end, persist: bool = True) -> pd.DataFrame:
             load_frames.append(_caiso.get_load(str(d)))
         except Exception as e:
             print(f"[load] skip {d}: {str(e)[:80]}")
-    if not fuel_frames or not load_frames:
-        raise RuntimeError("no generation/load data fetched for the given range")
 
+    # NOTE: If no data generated in either, raise RuntimeError
+    if not fuel_frames:
+        raise RuntimeError("no generation data fetched for the given range")
+    if not load_frames:
+        raise RuntimeError("no load data fetched for the given range")
+
+    # NOTE: Returns hourly mean (dataframe with hourly mean of only listed columns) of solar, wind from fuel_frames (CAISO get_fuel_mix() data)
     fuel = _hourly_mean(pd.concat(fuel_frames, ignore_index=True), ["Solar", "Wind"])
     fuel = fuel.rename(columns={"Solar": "solar_mwh", "Wind": "wind_mwh"})
+
+    # NOTE: Returns hourly mean (dataframe with hourly mean of only listed columns) of load from load (CAISO get_load() data)
     load = _hourly_mean(pd.concat(load_frames, ignore_index=True), ["Load"])
     load = load.rename(columns={"Load": "demand_mwh"})
 
+     #NOTE: Merges fuel and load by finding rows where they have same timestamp, creating new df, adding each unique column as a column in the df
     out = (
         fuel.merge(load, on="timestamp", how="inner")
         .sort_values("timestamp")
         .reset_index(drop=True)
     )
 
+    # NOTE: persist = did caller ask to save data
     if persist:
         n = write_df(out, "generation_load")
         print(f"[generation_load] wrote {len(out)} rows ({n} now in table 'generation_load')")
     return out
 
+'''
+Main function
 
+Note: Doing python -m backend.data.caiso will make this function run automatically, but not if we import caiso into another file
+'''
 if __name__ == "__main__":
-    # Small default backfill so the step runs end-to-end. Pass a day count to
-    # widen it, e.g. `python -m backend.data.caiso 365` for the real training pull.
+
+    # NOTE: Check whether number was typed (i.e. python -m backend.data.caiso 365), else default = 30
     days = int(sys.argv[1]) if len(sys.argv) > 1 else 30
-    end = date.today() - timedelta(days=1)  # yesterday: today's report may be partial
+
+    # NOTE: end = today - 1 day = yesterday (as today's report may be partial)
+    end = date.today() - timedelta(days=1)
+
     start = end - timedelta(days=days)
     print(f"Backfilling CAISO {start} -> {end} ({days} days)")
+
     fetch_curtailment(start, end)
     fetch_generation_load(start, end)
