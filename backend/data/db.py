@@ -37,6 +37,8 @@ def write_df(
     df: pd.DataFrame,
     table: str,
     db_path: Path | str = DB_PATH,
+
+    # NOTE: Default is replace because running write_df on consecutive days would otherwise duplicate data, it is meant to be used for a one time backfill, not continuous daily appending (until deployment)
     mode: str = "replace",
 ) -> int:
     
