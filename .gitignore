@@ -1,2 +1,4 @@
 .venv/
 backend/.env
+backend/data/*.db
+backend/data/__pycache__/
